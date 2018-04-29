@@ -8,6 +8,8 @@ fn main() {
 
     cloning_heap_data();
 
+    func_ownership();
+
 } // bracket marks end of scope? s no longer valid. Drop called here
 
 fn string_on_heap() {
@@ -45,6 +47,7 @@ fn var_ownership() {
     // corruption, rust considers s1 "no longer valid" after the 
     // assignment to s2, and s1 as a variable will no longer work
     println!("{}", s2);
+    println!("{}", s2);
     // println!("{}", s1); // could not compile: 'ownership'! value used here after move
 
     // because s1 is invalidated after being moved to s2,
@@ -69,3 +72,39 @@ fn cloning_heap_data() {
 
     // .clone can be used as a visual sign of an expensive operation taking place
 }
+
+fn stack_data_no_clone_needed() {
+
+    // the value of 5, x, and y can all be known at compile time
+    // and thus, will never need space on the heap, only the stack.
+    // So hewre, x and y will be valid without a clone, and no variable
+    // will be invalidated to avoid double freeing on the heap
+    let x = 5;
+    let y = x;
+    // integers and other types like it that can completely exist on 
+    // the stack can have a "Copy" trait to indicate that older variables
+    // are still usable after reassignment. You can't implement a Copy
+    // trait on a type with a drop trait implemented
+
+    println!("x = {}, y = {}", x, y);
+}
+
+fn func_ownership() {
+    let s = String::from("hello"); 
+
+    takes_ownership(s); // passing heap ownership of s to func
+    // println!("{}", s); // s no longer valid in this scope, error
+
+    let x = 5; // Copy trait implemented, implying value only on stack
+
+    makes_copy(x); // x still exists in this scope 
+    println!("{}", x);
+}
+
+fn takes_ownership(some_string: String) {
+    println!("{}", some_string);
+} // drop called on some_string here, freeing memory
+
+fn makes_copy(some_integer: i32) {
+    println!("{}", some_integer);
+} // some_integer has no drop implementation. Not needed, not called
