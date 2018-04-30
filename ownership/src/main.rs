@@ -1,14 +1,16 @@
 fn main() {
     // s not yet declared and thus, invalid (non-hoisted)
-    let s = "hello"; // s is valid from this point forward
+    // let s = "hello"; // s is valid from this point forward
 
-    string_on_heap();
+    // string_on_heap();
 
-    var_ownership();
+    // var_ownership();
 
-    cloning_heap_data();
+    // cloning_heap_data();
 
-    func_ownership();
+    // func_ownership();
+
+    return_values()
 
 } // bracket marks end of scope? s no longer valid. Drop called here
 
@@ -108,3 +110,24 @@ fn takes_ownership(some_string: String) {
 fn makes_copy(some_integer: i32) {
     println!("{}", some_integer);
 } // some_integer has no drop implementation. Not needed, not called
+
+fn return_values() {
+    let s1 = gives_ownership(); // return passes ownership to this scope
+
+    let mut s2 = String::from("hello"); // ownership in this scope
+
+    let s2 = takes_and_gives_back(s2); // ownership passed to function block, passed back with return
+
+    println!("{}", s2);
+}
+
+fn gives_ownership() -> String {
+    let some_string = String::from("hello");
+
+    some_string
+}
+
+fn takes_and_gives_back(a_string: String) -> String {
+
+    a_string
+}
