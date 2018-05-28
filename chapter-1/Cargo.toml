@@ -1,0 +1,7 @@
+[package]
+name = "chapter-1"
+version = "0.1.0"
+authors = ["Nicolas Hampton <nicolasjhampton@gmail.com>"]
+
+[dependencies]
+rand = "0.3.14"
